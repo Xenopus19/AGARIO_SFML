@@ -6,7 +6,7 @@ namespace Agario;
 public interface ICollidable
 {
 	public void OnCollision(ICollidable collidedObject) { }
-	public void CheckColiision(ICollidable collidedObject) { }
+	public void CheckCollision(ICollidable collidedObject) { }
 
 	public FloatRect GetCollider() { return new(); }
 }

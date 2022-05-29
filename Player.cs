@@ -28,9 +28,9 @@ public struct Controls
 		RightKey = right;
     }
 }
-public class Ball : ICollidable, IUpdatable, IDrawable
+public class Player : ICollidable, IUpdatable, IDrawable
 {
-	private const int RADIUS_COEF = 10;
+	private const int RADIUS_COEF = 5;
 
 	private bool IsBot;
 	private Controls controls;
@@ -41,8 +41,10 @@ public class Ball : ICollidable, IUpdatable, IDrawable
 
 	private CircleShape sprite;
 
-	public Ball()
+	public Player()
 	{
+		sprite = new();
+		sprite.Position = Game.GetRandomPosition();
 		Speed = 0.5f;
 		controls = new();
 		IsBot = false;
@@ -69,7 +71,13 @@ public class Ball : ICollidable, IUpdatable, IDrawable
 
 	private void OnCollision(ICollidable collidable)
     {
-		Console.WriteLine("Ball collided");
+		if(collidable is Food)
+        {
+			Console.WriteLine("Collided wot food");
+			Food food = (Food)collidable;
+			Power += food.GetEaten();
+			CalculateRadius();
+        }
     }
 
 	public FloatRect GetCollider()
@@ -130,8 +138,12 @@ public class Ball : ICollidable, IUpdatable, IDrawable
 
 	private void InitGraphics()
     {
-		sprite = new();
-		sprite.Radius = RADIUS_COEF * Power;
+		CalculateRadius();
 		sprite.FillColor = Color.White;
+    }
+
+	private void CalculateRadius()
+    {
+		sprite.Radius = RADIUS_COEF * Power + 5;
     }
 }

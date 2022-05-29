@@ -16,6 +16,11 @@ public class Game
 	private List<IUpdatable> updatableList;
 	private List<ICollidable> collidableList;
 	private List<IDrawable> drawableList;
+
+	private List<object> objectsToDelete;
+
+	private float FoodCooldown;
+	private float PassedCooldown;
 	public Game()
 	{
 		window = new (new(WINDOW_X, WINDOW_Y), GAME_NAME);
@@ -23,11 +28,22 @@ public class Game
 		collidableList = new ();
 		drawableList = new ();
 		updatableList = new ();
+		objectsToDelete = new();
+
+		FoodCooldown = 1000;
+		PassedCooldown = 0;
 	}
+
+	public static Vector2f GetRandomPosition()
+    {
+		Random random = new Random();
+
+		return new Vector2f(random.Next(WINDOW_X), random.Next(WINDOW_Y));
+    }
 
 	public void Begin()
     {
-		Spawn<Ball>();
+		Spawn<Player>();
 		while(window.IsOpen)
         {
 			GameCycle();
@@ -40,8 +56,22 @@ public class Game
 
 		UpdateObjects();
 		CheckCollision();
+		TrySpawnFood();
 
 		DrawObjects();
+
+		ClearDespawnList();
+    }
+
+	private void TrySpawnFood()
+    {
+		PassedCooldown += Time.DeltaTime;
+
+		if(PassedCooldown>=FoodCooldown)
+        {
+			Spawn<Food>().OnEaten+=AddToDespawnList;
+			PassedCooldown = 0;
+        }
     }
 
 	private void DrawObjects()
@@ -72,23 +102,56 @@ public class Game
 			{
 				if (collidable == collidable1) continue;
 
-				collidable.CheckColiision(collidable1);
+				collidable.CheckCollision(collidable1);
 			}
 		}
 	}
 
-	private void Spawn<Type>() where Type : new()
+	private Type Spawn<Type>() where Type : new()
     {
 		Type gameObject = new ();
 
 		TryAddToCollection<IDrawable>(gameObject, drawableList);
 		TryAddToCollection<IUpdatable>(gameObject, updatableList);
 		TryAddToCollection<ICollidable>(gameObject, collidableList);
-	}
 
+		return gameObject;
+	}
 	private void TryAddToCollection<T>(object gameObject, List<T> collection)
-    {
+	{
 		if (gameObject is T)
 			collection.Add((T)gameObject);
 	}
+
+	private void ClearDespawnList()
+	{
+		foreach (object ToDespawn in objectsToDelete)
+		{
+			Despawn(ToDespawn);
+		}
+
+		objectsToDelete.Clear();
+	}
+
+	private void AddToDespawnList(object ToDespawn)
+    {
+		objectsToDelete.Add(ToDespawn);
+    }
+
+	private void Despawn(object ToDespawn)
+    {
+		TryRemoveFromCollection<IDrawable>(ToDespawn, drawableList);
+		TryRemoveFromCollection<IUpdatable>(ToDespawn, updatableList);
+		TryRemoveFromCollection<ICollidable>(ToDespawn, collidableList);
+    }
+
+	private void TryRemoveFromCollection<T>(object ToRemove, List<T> collection)
+    {
+		if (!(ToRemove is T)) return;
+
+		if (collection.Contains((T)ToRemove))
+			collection.Remove((T)ToRemove);
+	}
+
+	
 }
