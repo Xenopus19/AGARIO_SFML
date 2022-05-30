@@ -30,12 +30,14 @@ public struct Controls
 }
 public class Player : ICollidable, IUpdatable, IDrawable
 {
+	public Action<Player> OnEaten;
+
 	private const int RADIUS_COEF = 5;
 
 	private bool IsBot;
 	private Controls controls;
 	private float Speed;
-	private float Power;
+	private int Power;
 
 	private Random random;
 
@@ -46,8 +48,9 @@ public class Player : ICollidable, IUpdatable, IDrawable
 		sprite = new();
 		sprite.Position = Game.GetRandomPosition();
 		Speed = 0.5f;
+		random = new();
 		controls = new();
-		IsBot = false;
+		IsBot = true;
 		Power = 1;
 		InitGraphics();
 	}
@@ -69,15 +72,32 @@ public class Player : ICollidable, IUpdatable, IDrawable
         }
     }
 
+	public int GetPower => Power;
+
+	public void ToggleBotOrPlayer() => IsBot = !IsBot;
+
 	private void OnCollision(ICollidable collidable)
     {
 		if(collidable is Food)
         {
-			Console.WriteLine("Collided wot food");
 			Food food = (Food)collidable;
-			Power += food.GetEaten();
-			CalculateRadius();
+			AddPower(food.GetEaten());
         }
+		else if(collidable is Player)
+        {
+			Player player = (Player)collidable;
+			if(Power > player.Power)
+            {
+				AddPower(player.Power);
+				player.GetEaten();
+            }
+        }
+    }
+
+	private void AddPower(int DeltaPower)
+    {
+		Power += DeltaPower;
+		CalculateRadius();
     }
 
 	public FloatRect GetCollider()
@@ -145,5 +165,11 @@ public class Player : ICollidable, IUpdatable, IDrawable
 	private void CalculateRadius()
     {
 		sprite.Radius = RADIUS_COEF * Power + 5;
+    }
+
+	public void GetEaten()
+    {
+		if (OnEaten != null)
+			OnEaten.Invoke(this);
     }
 }

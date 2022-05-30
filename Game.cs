@@ -21,6 +21,8 @@ public class Game
 
 	private float FoodCooldown;
 	private float PassedCooldown;
+
+	private int PlayersAmount;
 	public Game()
 	{
 		window = new (new(WINDOW_X, WINDOW_Y), GAME_NAME);
@@ -32,6 +34,8 @@ public class Game
 
 		FoodCooldown = 1000;
 		PassedCooldown = 0;
+
+		PlayersAmount = 5;
 	}
 
 	public static Vector2f GetRandomPosition()
@@ -43,11 +47,21 @@ public class Game
 
 	public void Begin()
     {
-		Spawn<Player>();
-		while(window.IsOpen)
+		SpawnPlayers();
+		while (window.IsOpen)
         {
 			GameCycle();
         }
+    }
+
+	private void SpawnPlayers()
+    {
+		Player notAI = Spawn<Player>();
+		notAI.ToggleBotOrPlayer();
+		notAI.OnEaten += AddToDespawnList;
+
+		for (int i = 0; i < PlayersAmount; i++)
+			Spawn<Player>().OnEaten += AddToDespawnList;
     }
 
 	public void GameCycle()
