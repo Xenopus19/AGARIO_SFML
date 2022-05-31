@@ -45,7 +45,8 @@ public class Food : IDrawable, ICollidable
 
     private void InitGraphics()
     {
-		sprite.FillColor = Color.Green;
-		sprite.Radius = 10;
+		sprite.FillColor = Color.White;
+		sprite.Radius = 20;
+		sprite.Texture = Graphics.FoodTexture;
     }
 }

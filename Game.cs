@@ -27,6 +27,7 @@ public class Game
 	{
 		window = new (new(WINDOW_X, WINDOW_Y), GAME_NAME);
 		window.SetFramerateLimit(60);
+		Graphics.LoadTextures();
 		collidableList = new ();
 		drawableList = new ();
 		updatableList = new ();

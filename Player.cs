@@ -160,6 +160,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
     {
 		CalculateRadius();
 		sprite.FillColor = Color.White;
+		sprite.Texture = Graphics.GetRandomPlayerTexture();
     }
 
 	private void CalculateRadius()
