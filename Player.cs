@@ -97,7 +97,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 	private void AddPower(int DeltaPower)
     {
 		Power += DeltaPower;
-		CalculateRadius();
+		CalculateNewStats();
     }
 
 	public FloatRect GetCollider()
@@ -158,14 +158,15 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	private void InitGraphics()
     {
-		CalculateRadius();
+		CalculateNewStats();
 		sprite.FillColor = Color.White;
 		sprite.Texture = Graphics.GetRandomPlayerTexture();
     }
 
-	private void CalculateRadius()
+	private void CalculateNewStats()
     {
 		sprite.Radius = RADIUS_COEF * Power + 5;
+		Speed /= Power;
     }
 
 	public void GetEaten()
