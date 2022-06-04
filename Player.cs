@@ -35,11 +35,11 @@ public class Player : ICollidable, IUpdatable, IDrawable
 	private const int RADIUS_COEF = 5;
 
 	private bool IsBot;
-	private Controls controls;
 	private float Speed;
 	private int Power;
 
 	private Random random;
+	private InputController inputController;
 
 	private CircleShape sprite;
 
@@ -49,7 +49,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 		sprite.Position = Game.GetRandomPosition();
 		Speed = 0.5f;
 		random = new();
-		controls = new();
+		inputController = new(new ());
 		IsBot = true;
 		Power = 1;
 		InitGraphics();
@@ -111,7 +111,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 		if (IsBot)
 			Direction = GetRandomDirection();
 		else
-			Direction = GetInputDirection();
+			Direction = inputController.GetInput();
 
 		sprite.Position += (Vector2f)Direction * Speed * Time.DeltaTime;
     }
@@ -138,22 +138,6 @@ public class Player : ICollidable, IUpdatable, IDrawable
 			}
 		}
 		return coordinate;
-	}
-
-	private Vector2i GetInputDirection()
-    {
-		Vector2i dir = new Vector2i();
-
-		if(Keyboard.IsKeyPressed(controls.UpKey))
-		    dir.Y = -1;
-		if (Keyboard.IsKeyPressed(controls.DownKey))
-			dir.Y = 1;
-		if (Keyboard.IsKeyPressed(controls.LeftKey))
-			dir.X = -1;
-		if (Keyboard.IsKeyPressed(controls.RightKey))
-			dir.X = 1;
-
-		return dir;
 	}
 
 	private void InitGraphics()
