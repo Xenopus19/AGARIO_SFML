@@ -42,7 +42,6 @@ public class Game
 	public static Vector2f GetRandomPosition()
     {
 		Random random = new Random();
-
 		return new Vector2f(random.Next(WINDOW_X), random.Next(WINDOW_Y));
     }
 

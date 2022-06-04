@@ -32,7 +32,9 @@ public class Player : ICollidable, IUpdatable, IDrawable
 {
 	public Action<Player> OnEaten;
 
-	private const int RADIUS_COEF = 5;
+	private static Player CurrentPlayer;
+
+	private const int RADIUS_COEF = 10;
 
 	private bool IsBot;
 	private float Speed;
@@ -57,10 +59,24 @@ public class Player : ICollidable, IUpdatable, IDrawable
 	public void Update()
     {
 		Move();
+		CheckSoulRecast();
+    }
+
+	private void CheckSoulRecast()
+    {
+		Vector2i mousePos = Mouse.GetPosition();
+		if(sprite.GetGlobalBounds().Contains(mousePos.X, mousePos.Y) && CurrentPlayer!=this)
+        {
+			Console.WriteLine("Soul Recast");
+			CurrentPlayer.ToggleBotOrPlayer();
+			ToggleBotOrPlayer();
+        }
     }
 
 	public void Draw(RenderWindow window)
     {
+		if (!IsBot) sprite.OutlineThickness = 5f;
+		else sprite.OutlineThickness = 0;
 		sprite.Draw(window, RenderStates.Default);
     }
 
@@ -74,7 +90,11 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	public int GetPower => Power;
 
-	public void ToggleBotOrPlayer() => IsBot = !IsBot;
+	public void ToggleBotOrPlayer()
+    {
+		IsBot = !IsBot;
+		if(IsBot == false) CurrentPlayer = this;
+    }
 
 	private void OnCollision(ICollidable collidable)
     {
