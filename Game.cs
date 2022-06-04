@@ -13,9 +13,9 @@ public class Game
 
 	private RenderWindow window;
 
-	private List<IUpdatable> updatableList;
-	private List<ICollidable> collidableList;
-	private List<IDrawable> drawableList;
+	private AgarioList<IUpdatable> updatableList;
+	private AgarioList<ICollidable> collidableList;
+	private AgarioList<IDrawable> drawableList;
 
 	private List<object> objectsToDelete;
 
@@ -92,7 +92,7 @@ public class Game
     {
 		window.Clear();
 
-		foreach(IDrawable drawable in drawableList)
+		foreach(IDrawable drawable in drawableList.list)
         {
 			drawable.Draw(window);
         }
@@ -102,7 +102,7 @@ public class Game
 
 	private void UpdateObjects()
     {
-		foreach (IUpdatable updatable in updatableList)
+		foreach (IUpdatable updatable in updatableList.list)
 		{
 			updatable.Update();
 		}
@@ -110,9 +110,9 @@ public class Game
 
 	private void CheckCollision()
     {
-		foreach (ICollidable collidable in collidableList)
+		foreach (ICollidable collidable in collidableList.list)
 		{
-			foreach (ICollidable collidable1 in collidableList)
+			foreach (ICollidable collidable1 in collidableList.list)
 			{
 				if (collidable == collidable1) continue;
 
@@ -125,16 +125,11 @@ public class Game
     {
 		Type gameObject = new ();
 
-		TryAddToCollection<IDrawable>(gameObject, drawableList);
-		TryAddToCollection<IUpdatable>(gameObject, updatableList);
-		TryAddToCollection<ICollidable>(gameObject, collidableList);
+		drawableList.TryAddToCollection(gameObject);
+		updatableList.TryAddToCollection(gameObject);
+		collidableList.TryAddToCollection(gameObject);	
 
 		return gameObject;
-	}
-	private void TryAddToCollection<T>(object gameObject, List<T> collection)
-	{
-		if (gameObject is T)
-			collection.Add((T)gameObject);
 	}
 
 	private void ClearDespawnList()
@@ -154,18 +149,8 @@ public class Game
 
 	private void Despawn(object ToDespawn)
     {
-		TryRemoveFromCollection<IDrawable>(ToDespawn, drawableList);
-		TryRemoveFromCollection<IUpdatable>(ToDespawn, updatableList);
-		TryRemoveFromCollection<ICollidable>(ToDespawn, collidableList);
+		drawableList.TryRemoveFromCollection(ToDespawn);
+		updatableList.TryRemoveFromCollection(ToDespawn);
+		collidableList.TryRemoveFromCollection(ToDespawn);
     }
-
-	private void TryRemoveFromCollection<T>(object ToRemove, List<T> collection)
-    {
-		if (!(ToRemove is T)) return;
-
-		if (collection.Contains((T)ToRemove))
-			collection.Remove((T)ToRemove);
-	}
-
-	
 }

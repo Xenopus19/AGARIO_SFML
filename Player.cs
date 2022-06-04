@@ -169,7 +169,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	private void CalculateNewStats()
     {
-		sprite.Radius = RADIUS_COEF * Power + 5;
+		sprite.Radius = RADIUS_COEF * Power + 10;
 		Speed /= Power;
     }
 
