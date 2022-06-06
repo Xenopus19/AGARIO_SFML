@@ -1,14 +1,12 @@
 ﻿using System;
 using SFML.Graphics;
 
-
+namespace Agario;
 public static class Graphics
 {
     public static Texture FoodTexture;
 
     private static List<Texture> PlayerTextures = new List<Texture>();
-
-    private static Random random = new();
 
     public static void LoadTextures()
     {
@@ -23,6 +21,6 @@ public static class Graphics
 
     public static Texture GetRandomPlayerTexture()
     {
-        return PlayerTextures[random.Next(PlayerTextures.Count)];
+        return PlayerTextures[AgarioRandom.NextInt(PlayerTextures.Count)];
     }
 }

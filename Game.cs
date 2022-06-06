@@ -41,8 +41,12 @@ public class Game
 
 	public static Vector2f GetRandomPosition()
     {
-		Random random = new Random();
-		return new Vector2f(random.Next(WINDOW_X), random.Next(WINDOW_Y));
+		return new Vector2f(AgarioRandom.NextInt(WINDOW_X), AgarioRandom.NextInt(WINDOW_Y));
+    }
+
+	public static bool PointIsInsideField(Vector2f point)
+    {
+		return point.X>0&&point.X<=WINDOW_X&&point.Y>0&&point.Y<=WINDOW_Y;
     }
 
 	public void Begin()

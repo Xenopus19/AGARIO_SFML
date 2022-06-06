@@ -3,15 +3,15 @@ using SFML.System;
 using SFML.Window;
 
 namespace Agario;
-public class InputController
+public class PlayerController : IController
 {
 	private Controls controls;
-	public InputController(Controls _controls)
+	public PlayerController(Controls _controls)
 	{
 		controls = _controls;
 	}
 
-	public Vector2i GetInput()
+	public Vector2f GetDirection()
     {
 		Vector2i dir = new Vector2i();
 
@@ -24,6 +24,6 @@ public class InputController
 		if (Keyboard.IsKeyPressed(controls.RightKey))
 			dir.X = 1;
 
-		return dir;
+		return (Vector2f)dir;
 	}
 }

@@ -36,12 +36,10 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	private const int RADIUS_COEF = 10;
 
-	private bool IsBot;
 	private float Speed;
 	private int Power;
 
-	private Random random;
-	private InputController inputController;
+	private IController inputController;
 
 	private CircleShape sprite;
 
@@ -50,9 +48,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 		sprite = new();
 		sprite.Position = Game.GetRandomPosition();
 		Speed = 0.5f;
-		random = new();
-		inputController = new(new ());
-		IsBot = true;
+		BecomeAI();
 		Power = 1;
 		InitGraphics();
 	}
@@ -61,6 +57,8 @@ public class Player : ICollidable, IUpdatable, IDrawable
 		Move();
 		CheckSoulRecast();
     }
+
+	public Vector2f Position => sprite.Position;
 
 	private void CheckSoulRecast()
     {
@@ -75,7 +73,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	public void Draw(RenderWindow window)
     {
-		if (!IsBot) sprite.OutlineThickness = 5f;
+		if (inputController is PlayerController) sprite.OutlineThickness = 5f;
 		else sprite.OutlineThickness = 0;
 		sprite.Draw(window, RenderStates.Default);
     }
@@ -92,9 +90,13 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	public void ToggleBotOrPlayer()
     {
-		IsBot = !IsBot;
-		if(IsBot == false) CurrentPlayer = this;
+		if (inputController is PlayerController)
+			BecomeAI();
+		else
+			BecomePlayer();
     }
+
+
 
 	private void OnCollision(ICollidable collidable)
     {
@@ -127,38 +129,14 @@ public class Player : ICollidable, IUpdatable, IDrawable
 
 	private void Move()
     {
-		Vector2i Direction;
-		if (IsBot)
-			Direction = GetRandomDirection();
-		else
-			Direction = inputController.GetInput();
+		Vector2f Direction = inputController.GetDirection();
 
-		sprite.Position += (Vector2f)Direction * Speed * Time.DeltaTime;
+		Vector2f newPos = sprite.Position + (Vector2f)Direction * Speed * Time.DeltaTime;
+
+		if(Game.PointIsInsideField(newPos))
+			sprite.Position = newPos;
     }
 
-	private Vector2i GetRandomDirection()
-    {
-		Vector2i direction = new(0, 0);
-
-		direction.X = GenerateRandomCoordinate();
-		direction.Y = GenerateRandomCoordinate();
-
-		return direction;
-    }
-
-	private int GenerateRandomCoordinate()
-    {
-		int coordinate = 0;
-		if (random.Next(10) % 2 == 0)
-		{
-			coordinate = 1;
-			if (random.Next(10) % 2 == 0)
-			{
-				coordinate = -1;
-			}
-		}
-		return coordinate;
-	}
 
 	private void InitGraphics()
     {
@@ -177,5 +155,16 @@ public class Player : ICollidable, IUpdatable, IDrawable
     {
 		if (OnEaten != null)
 			OnEaten.Invoke(this);
+    }
+
+	private void BecomePlayer()
+    {
+		inputController = new PlayerController(new());
+		CurrentPlayer = this;
+    }
+
+	private void BecomeAI()
+    {
+		inputController = new AIController();
     }
 }
