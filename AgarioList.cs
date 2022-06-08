@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections;
 
 namespace Agario;
-public class AgarioList<T> 
+public class AgarioList<T> : IEnumerable<T>
 {
     private List<T> _list;
 
@@ -10,9 +11,9 @@ public class AgarioList<T>
         _list = new List<T>();
     }
 
-    public List<T> list
+    public IEnumerator<T> GetEnumerator()
     {
-        get { return _list; }
+        return ((IEnumerable<T>)_list).GetEnumerator();
     }
 
     public void TryAddToCollection(object gameObject)
@@ -30,4 +31,8 @@ public class AgarioList<T>
             _list.Remove((T)ToRemove);
     }
 
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)_list).GetEnumerator();
+    }
 }

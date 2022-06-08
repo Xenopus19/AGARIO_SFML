@@ -96,7 +96,7 @@ public class Game
     {
 		window.Clear();
 
-		foreach(IDrawable drawable in drawableList.list)
+		foreach(IDrawable drawable in drawableList)
         {
 			drawable.Draw(window);
         }
@@ -106,7 +106,7 @@ public class Game
 
 	private void UpdateObjects()
     {
-		foreach (IUpdatable updatable in updatableList.list)
+		foreach (IUpdatable updatable in updatableList)
 		{
 			updatable.Update();
 		}
@@ -114,9 +114,9 @@ public class Game
 
 	private void CheckCollision()
     {
-		foreach (ICollidable collidable in collidableList.list)
+		foreach (ICollidable collidable in collidableList)
 		{
-			foreach (ICollidable collidable1 in collidableList.list)
+			foreach (ICollidable collidable1 in collidableList)
 			{
 				if (collidable == collidable1) continue;
 
