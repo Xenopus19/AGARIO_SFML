@@ -1,8 +1,9 @@
 ﻿using System;
 using SFML.Graphics;
 using SFML.System;
+using Agario.AdditionalTools;
 
-namespace Agario;
+namespace Agario.GameObjects;
 public class Food : IDrawable, ICollidable
 {
 	public Action<Food> OnEaten;

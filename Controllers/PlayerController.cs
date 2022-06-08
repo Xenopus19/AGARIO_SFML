@@ -2,7 +2,7 @@
 using SFML.System;
 using SFML.Window;
 
-namespace Agario;
+namespace Agario.Controllers;
 public class PlayerController : IController
 {
 	private Controls controls;

@@ -1,9 +1,9 @@
 ﻿using System;
 using SFML.System;
 
-namespace Agario;
+namespace Agario.AdditionalTools;
 
-public static class Time
+public static class AgarioTime
 {
     public static float DeltaTime;
 

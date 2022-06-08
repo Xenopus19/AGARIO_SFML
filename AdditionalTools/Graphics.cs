@@ -1,7 +1,7 @@
 ﻿using System;
 using SFML.Graphics;
 
-namespace Agario;
+namespace Agario.AdditionalTools;
 public static class Graphics
 {
     public static Texture FoodTexture;

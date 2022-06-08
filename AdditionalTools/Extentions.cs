@@ -1,7 +1,7 @@
 ﻿using System;
 using SFML.System;
 
-namespace Agario;
+namespace Agario.AdditionalTools;
 public static class Extentions
 {
     public static Vector2f Normalize(this Vector2f vector)

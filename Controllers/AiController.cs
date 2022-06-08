@@ -1,8 +1,9 @@
 ﻿using SFML.System;
 using SFML.Graphics;
 using System;
+using Agario.AdditionalTools;
 
-namespace Agario;
+namespace Agario.Controllers;
 
 
 public class AIController : IController
@@ -19,7 +20,7 @@ public class AIController : IController
 
 	public Vector2f GetDirection()
     {
-        cooldownPassed += Time.DeltaTime;
+        cooldownPassed += AgarioTime.DeltaTime;
         if(cooldownPassed>=destinatonChangeCooldown)
         {
             PickNewDestination();

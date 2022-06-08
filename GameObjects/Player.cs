@@ -2,32 +2,12 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using Agario.Controllers;
+using Agario.AdditionalTools;
 
-namespace Agario;
+namespace Agario.GameObjects;
 
-public struct Controls
-{
-	public Keyboard.Key UpKey;
-	public Keyboard.Key LeftKey;
-	public Keyboard.Key DownKey;
-	public Keyboard.Key RightKey;
 
-	public Controls()
-	{
-		UpKey = Keyboard.Key.W;
-		LeftKey = Keyboard.Key.A;
-		DownKey = Keyboard.Key.S;
-		RightKey = Keyboard.Key.D;
-	}
-
-	public Controls(Keyboard.Key up, Keyboard.Key left, Keyboard.Key down, Keyboard.Key right)
-    {
-		UpKey = up;
-		LeftKey = left;	
-		DownKey = down;
-		RightKey = right;
-    }
-}
 public class Player : ICollidable, IUpdatable, IDrawable
 {
 	public Action<Player> OnEaten;
@@ -131,7 +111,7 @@ public class Player : ICollidable, IUpdatable, IDrawable
     {
 		Vector2f Direction = inputController.GetDirection();
 
-		Vector2f newPos = sprite.Position + (Vector2f)Direction * Speed * Time.DeltaTime;
+		Vector2f newPos = sprite.Position + (Vector2f)Direction * Speed * AgarioTime.DeltaTime;
 
 		if(Game.PointIsInsideField(newPos))
 			sprite.Position = newPos;

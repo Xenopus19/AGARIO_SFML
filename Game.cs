@@ -2,6 +2,8 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using Agario.AdditionalTools;
+using Agario.GameObjects;
 
 namespace Agario;
 
@@ -70,7 +72,7 @@ public class Game
 
 	public void GameCycle()
     {
-		Time.UpdateDeltaTime();
+		AgarioTime.UpdateDeltaTime();
 
 		UpdateObjects();
 		CheckCollision();
@@ -83,7 +85,7 @@ public class Game
 
 	private void TrySpawnFood()
     {
-		PassedCooldown += Time.DeltaTime;
+		PassedCooldown += AgarioTime.DeltaTime;
 
 		if(PassedCooldown>=FoodCooldown)
         {
