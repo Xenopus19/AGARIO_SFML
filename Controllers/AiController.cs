@@ -4,10 +4,7 @@ using System;
 
 namespace Agario;
 
-public interface IController
-{
-	public Vector2f GetDirection();
-}
+
 public class AIController : IController
 {
     private Vector2f destination;
