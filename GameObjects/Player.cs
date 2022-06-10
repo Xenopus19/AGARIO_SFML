@@ -8,10 +8,8 @@ using Agario.AdditionalTools;
 namespace Agario.GameObjects;
 
 
-public class Player : ICollidable, IUpdatable, IDrawable
+public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 {
-	public Action<Player> OnEaten;
-
 	private static Player CurrentPlayer;
 
 	private const int RADIUS_COEF = 10;

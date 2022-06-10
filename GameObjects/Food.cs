@@ -4,10 +4,8 @@ using SFML.System;
 using Agario.AdditionalTools;
 
 namespace Agario.GameObjects;
-public class Food : IDrawable, ICollidable
+public class Food : DeletableObject, IDrawable, ICollidable
 {
-	public Action<Food> OnEaten;
-
 	private CircleShape sprite;
 
 	private int PowerAmount;
@@ -24,6 +22,7 @@ public class Food : IDrawable, ICollidable
     {
 		if(OnEaten!=null)
         {
+			Console.WriteLine("OnEatenInvoked");
 			OnEaten.Invoke(this);
 			return PowerAmount;
         }

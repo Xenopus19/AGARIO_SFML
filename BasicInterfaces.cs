@@ -21,4 +21,8 @@ public interface IDrawable
 	public void Draw(RenderWindow window) { }
 }
 
+public class DeletableObject
+{
+	public Action<DeletableObject> OnEaten;
+}
 

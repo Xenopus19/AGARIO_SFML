@@ -13,13 +13,15 @@ public class Game
 	public const int WINDOW_Y = 900;
 	public const string GAME_NAME = "Шарики-каннибалы";
 
+	private static Game game;
+
 	private RenderWindow window;
 
 	private AgarioList<IUpdatable> updatableList;
 	private AgarioList<ICollidable> collidableList;
 	private AgarioList<IDrawable> drawableList;
 
-	private List<object> objectsToDelete;
+	private List<DeletableObject> objectsToDelete;
 
 	private float FoodCooldown;
 	private float PassedCooldown;
@@ -64,10 +66,9 @@ public class Game
     {
 		Player notAI = Spawn<Player>();
 		notAI.ToggleBotOrPlayer();
-		notAI.OnEaten += AddToDespawnList;
 
 		for (int i = 0; i < PlayersAmount; i++)
-			Spawn<Player>().OnEaten += AddToDespawnList;
+			Spawn<Player>();
     }
 
 	public void GameCycle()
@@ -89,7 +90,7 @@ public class Game
 
 		if(PassedCooldown>=FoodCooldown)
         {
-			Spawn<Food>().OnEaten+=AddToDespawnList;
+			Spawn<Food>();
 			PassedCooldown = 0;
         }
     }
@@ -133,14 +134,17 @@ public class Game
 
 		drawableList.TryAddToCollection(gameObject);
 		updatableList.TryAddToCollection(gameObject);
-		collidableList.TryAddToCollection(gameObject);	
+		collidableList.TryAddToCollection(gameObject);
+
+		if (gameObject is DeletableObject deletable)
+			SubscribeDeleteEvent(deletable);
 
 		return gameObject;
 	}
 
 	private void ClearDespawnList()
 	{
-		foreach (object ToDespawn in objectsToDelete)
+		foreach (DeletableObject ToDespawn in objectsToDelete)
 		{
 			Despawn(ToDespawn);
 		}
@@ -148,15 +152,27 @@ public class Game
 		objectsToDelete.Clear();
 	}
 
-	private void AddToDespawnList(object ToDespawn)
+	private void SubscribeDeleteEvent(DeletableObject Object)
     {
+		Object.OnEaten += AddToDespawnList;
+    }
+
+	private void UnSubscribeDeleteEvent(DeletableObject Object)
+	{
+		Object.OnEaten -= AddToDespawnList;
+	}
+
+	private void AddToDespawnList(DeletableObject ToDespawn)
+    {
+		Console.WriteLine("Added to despawn list");
 		objectsToDelete.Add(ToDespawn);
     }
 
-	private void Despawn(object ToDespawn)
+	private void Despawn(DeletableObject ToDespawn)
     {
 		drawableList.TryRemoveFromCollection(ToDespawn);
 		updatableList.TryRemoveFromCollection(ToDespawn);
 		collidableList.TryRemoveFromCollection(ToDespawn);
+		UnSubscribeDeleteEvent(ToDespawn);
     }
 }

@@ -18,17 +18,17 @@ public class AgarioList<T> : IEnumerable<T>
 
     public void TryAddToCollection(object gameObject)
     {
-        if (gameObject is T)
-            _list.Add((T)gameObject);
+        if (gameObject is T Object)
+            _list.Add(Object);
     }
 
 
     public void TryRemoveFromCollection(object ToRemove)
     {
-        if (!(ToRemove is T)) return;
+        if (!(ToRemove is T Object)) return;
 
-        if (_list.Contains((T)ToRemove))
-            _list.Remove((T)ToRemove);
+        if (_list.Contains(Object))
+            _list.Remove(Object);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
