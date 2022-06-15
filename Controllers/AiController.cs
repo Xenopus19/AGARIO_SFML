@@ -2,11 +2,12 @@
 using SFML.Graphics;
 using System;
 using Agario.AdditionalTools;
+using Agario.GameObjects;
 
 namespace Agario.Controllers;
 
 
-public class AIController : IController
+public class AIController : Controller
 {
     private Vector2f destination;
 
@@ -18,7 +19,7 @@ public class AIController : IController
         PickNewDestination();
     }
 
-	public Vector2f GetDirection()
+	public override void GetDirection(Player player)
     {
         cooldownPassed += AgarioTime.DeltaTime;
         if(cooldownPassed>=destinatonChangeCooldown)
@@ -26,7 +27,7 @@ public class AIController : IController
             PickNewDestination();
         }
 
-        return destination.Normalize();
+        player.Move(destination.Normalize());
     }
 
     private void PickNewDestination()

@@ -29,18 +29,25 @@ public class Game
 	private int PlayersAmount;
 	public Game()
 	{
-		window = new (new(WINDOW_X, WINDOW_Y), GAME_NAME);
+		game = this;
+
+		window = new(new(WINDOW_X, WINDOW_Y), GAME_NAME);
 		window.SetFramerateLimit(60);
 		Graphics.LoadTextures();
-		collidableList = new ();
-		drawableList = new ();
-		updatableList = new ();
+		collidableList = new();
+		drawableList = new();
+		updatableList = new();
 		objectsToDelete = new();
 
 		FoodCooldown = 1000;
 		PassedCooldown = 0;
 
 		PlayersAmount = 5;
+	}
+
+	public static T Instantiate<T>() where T : new()
+    {
+		return game.Spawn<T>();
 	}
 
 	public static Vector2f GetRandomPosition()

@@ -1,11 +1,16 @@
 ﻿using System;
 using SFML.System;
 using SFML.Window;
+using Agario.GameObjects;
 
 namespace Agario.Controllers;
-public interface IController
+public abstract class Controller
 {
-	public Vector2f GetDirection();
+	public void GetCommands(Player player) 
+	{
+		GetDirection(player);
+	}
+	public virtual void GetDirection(Player player) { }
 }
 
 public struct Controls

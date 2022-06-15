@@ -1,17 +1,18 @@
 ﻿using System;
 using SFML.System;
 using SFML.Window;
+using Agario.GameObjects;
 
 namespace Agario.Controllers;
-public class PlayerController : IController
+public class PlayerController : Controller
 {
 	private Controls controls;
-	public PlayerController(Controls _controls)
+	public PlayerController(Controls _controls) 
 	{
 		controls = _controls;
 	}
 
-	public Vector2f GetDirection()
+	public override void GetDirection(Player player)
     {
 		Vector2i dir = new Vector2i();
 
@@ -24,6 +25,6 @@ public class PlayerController : IController
 		if (Keyboard.IsKeyPressed(controls.RightKey))
 			dir.X = 1;
 
-		return (Vector2f)dir;
+		 player.Move((Vector2f)dir);
 	}
 }

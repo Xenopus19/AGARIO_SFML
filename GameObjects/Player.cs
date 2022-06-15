@@ -17,7 +17,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 	private float Speed;
 	private int Power;
 
-	private IController inputController;
+	private Controller controller;
 
 	private CircleShape sprite;
 
@@ -32,7 +32,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 	}
 	public void Update()
     {
-		Move();
+		controller.GetCommands(this);
 		CheckSoulRecast();
     }
 
@@ -51,7 +51,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 
 	public void Draw(RenderWindow window)
     {
-		if (inputController is PlayerController) sprite.OutlineThickness = 5f;
+		if (controller is PlayerController) sprite.OutlineThickness = 5f;
 		else sprite.OutlineThickness = 0;
 		sprite.Draw(window, RenderStates.Default);
     }
@@ -68,7 +68,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 
 	public void ToggleBotOrPlayer()
     {
-		if (inputController is PlayerController)
+		if (controller is PlayerController)
 			BecomeAI();
 		else
 			BecomePlayer();
@@ -105,11 +105,9 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 		return sprite.GetGlobalBounds();
     }
 
-	private void Move()
+	public void Move(Vector2f Direction)
     {
-		Vector2f Direction = inputController.GetDirection();
-
-		Vector2f newPos = sprite.Position + (Vector2f)Direction * Speed * AgarioTime.DeltaTime;
+		Vector2f newPos = sprite.Position + Direction * Speed * AgarioTime.DeltaTime;
 
 		if(Game.PointIsInsideField(newPos))
 			sprite.Position = newPos;
@@ -137,12 +135,12 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 
 	private void BecomePlayer()
     {
-		inputController = new PlayerController(new());
+		controller = new PlayerController(new());
 		CurrentPlayer = this;
     }
 
 	private void BecomeAI()
     {
-		inputController = new AIController();
+		controller = new AIController();
     }
 }
