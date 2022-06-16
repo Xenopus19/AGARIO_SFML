@@ -14,19 +14,14 @@ public class Food : DeletableObject, IDrawable, ICollidable
 	{
 		PowerAmount = 2;
 		sprite = new();
-		sprite.Position = Game.GetRandomPosition();
+		sprite.Position = AgarioRandom.GetRandomPosition();
 		InitGraphics();
 	}
 
 	public int GetEaten()
     {
-		if(OnEaten!=null)
-        {
-			Console.WriteLine("OnEatenInvoked");
-			OnEaten.Invoke(this);
-			return PowerAmount;
-        }
-		return 0;
+		InvokeDeleteEvent();
+		return PowerAmount;
     }
 
 	public void OnCollisionEnter(ICollidable collided)

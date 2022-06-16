@@ -23,6 +23,14 @@ public interface IDrawable
 
 public class DeletableObject
 {
-	public Action<DeletableObject> OnEaten;
+	public Action<DeletableObject> OnDestroy;
+
+	protected void InvokeDeleteEvent()
+    {
+		if(OnDestroy != null)
+        {
+			OnDestroy.Invoke(this);
+        }
+    }
 }
 

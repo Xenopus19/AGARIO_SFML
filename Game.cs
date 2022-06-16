@@ -22,6 +22,7 @@ public class Game
 	private AgarioList<IDrawable> drawableList;
 
 	private List<DeletableObject> objectsToDelete;
+	private List<object> objectsToSpawn;
 
 	private float FoodCooldown;
 	private float PassedCooldown;
@@ -38,6 +39,7 @@ public class Game
 		drawableList = new();
 		updatableList = new();
 		objectsToDelete = new();
+		objectsToSpawn = new();
 
 		FoodCooldown = 1000;
 		PassedCooldown = 0;
@@ -50,15 +52,7 @@ public class Game
 		return game.Spawn<T>();
 	}
 
-	public static Vector2f GetRandomPosition()
-    {
-		return new Vector2f(AgarioRandom.NextInt(WINDOW_X), AgarioRandom.NextInt(WINDOW_Y));
-    }
-
-	public static bool PointIsInsideField(Vector2f point)
-    {
-		return point.X>0&&point.X<=WINDOW_X&&point.Y>0&&point.Y<=WINDOW_Y;
-    }
+	
 
 	public void Begin()
     {
@@ -89,6 +83,16 @@ public class Game
 		DrawObjects();
 
 		ClearDespawnList();
+		SpawnObjects();
+    }
+
+	private void SpawnObjects()
+    {
+		foreach (var obj in objectsToSpawn)
+        {
+			AddToCollections(obj);
+        }
+		objectsToSpawn.Clear();
     }
 
 	private void TrySpawnFood()
@@ -135,16 +139,21 @@ public class Game
 		}
 	}
 
-	private Type Spawn<Type>() where Type : new()
+	private void AddToCollections(object gameObject)
     {
-		Type gameObject = new ();
-
 		drawableList.TryAddToCollection(gameObject);
 		updatableList.TryAddToCollection(gameObject);
 		collidableList.TryAddToCollection(gameObject);
 
 		if (gameObject is DeletableObject deletable)
 			SubscribeDeleteEvent(deletable);
+	}
+
+	private Type Spawn<Type>() where Type : new()
+    {
+		Type gameObject = new ();
+
+		objectsToSpawn.Add(gameObject);
 
 		return gameObject;
 	}
@@ -161,12 +170,12 @@ public class Game
 
 	private void SubscribeDeleteEvent(DeletableObject Object)
     {
-		Object.OnEaten += AddToDespawnList;
+		Object.OnDestroy += AddToDespawnList;
     }
 
 	private void UnSubscribeDeleteEvent(DeletableObject Object)
 	{
-		Object.OnEaten -= AddToDespawnList;
+		Object.OnDestroy -= AddToDespawnList;
 	}
 
 	private void AddToDespawnList(DeletableObject ToDespawn)

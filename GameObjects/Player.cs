@@ -24,7 +24,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 	public Player()
 	{
 		sprite = new();
-		sprite.Position = Game.GetRandomPosition();
+		sprite.Position = AgarioRandom.GetRandomPosition();
 		Speed = 0.5f;
 		BecomeAI();
 		Power = 1;
@@ -34,9 +34,15 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
     {
 		controller.GetCommands(this);
 		CheckSoulRecast();
+		CheckHp();
     }
 
 	public Vector2f Position => sprite.Position;
+
+	public void GetDamage(int Damage)
+    {
+		ChangePower(-Damage);
+    }
 
 	private void CheckSoulRecast()
     {
@@ -47,6 +53,11 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 			CurrentPlayer.ToggleBotOrPlayer();
 			ToggleBotOrPlayer();
         }
+    }
+
+	private void CheckHp()
+    {
+		if (Power <= 0) InvokeDeleteEvent();
     }
 
 	public void Draw(RenderWindow window)
@@ -74,6 +85,11 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 			BecomePlayer();
     }
 
+	public void MakeShot(Vector2f clickedPosition)
+    {
+		Bullet bullet  = Game.Instantiate<Bullet>();
+		bullet.Init(this, -(Position-clickedPosition).Normalize());
+    }
 
 
 	private void OnCollision(ICollidable collidable)
@@ -81,20 +97,20 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 		if(collidable is Food)
         {
 			Food food = (Food)collidable;
-			AddPower(food.GetEaten());
+			ChangePower(food.GetEaten());
         }
 		else if(collidable is Player)
         {
 			Player player = (Player)collidable;
 			if(Power > player.Power)
             {
-				AddPower(player.Power);
+				ChangePower(player.Power);
 				player.GetEaten();
             }
         }
     }
 
-	private void AddPower(int DeltaPower)
+	private void ChangePower(int DeltaPower)
     {
 		Power += DeltaPower;
 		CalculateNewStats();
@@ -109,7 +125,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
     {
 		Vector2f newPos = sprite.Position + Direction * Speed * AgarioTime.DeltaTime;
 
-		if(Game.PointIsInsideField(newPos))
+		if(newPos.PointIsInsideField())
 			sprite.Position = newPos;
     }
 
@@ -129,8 +145,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 
 	public void GetEaten()
     {
-		if (OnEaten != null)
-			OnEaten.Invoke(this);
+		InvokeDeleteEvent();
     }
 
 	private void BecomePlayer()

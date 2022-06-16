@@ -27,4 +27,13 @@ public class PlayerController : Controller
 
 		 player.Move((Vector2f)dir);
 	}
+
+    public override void GetShotDirection(Player player)
+    {
+        if(Keyboard.IsKeyPressed(controls.ShotKey))
+        {
+			Vector2f dir = (Vector2f)Mouse.GetPosition();
+			player.MakeShot(dir);
+        }
+    }
 }

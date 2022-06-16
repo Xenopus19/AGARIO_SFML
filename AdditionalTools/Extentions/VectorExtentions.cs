@@ -2,7 +2,7 @@
 using SFML.System;
 
 namespace Agario.AdditionalTools;
-public static class Extentions
+public static class VectorExtentions
 {
     public static Vector2f Normalize(this Vector2f vector)
     {
@@ -23,18 +23,12 @@ public static class Extentions
         return AlmostEquals;
     }
 
-    public static bool AlmostEqual(this float num1, float num2, float oversight)
+    
+
+    public static bool PointIsInsideField(this Vector2f point)
     {
-        return MathF.Abs(num1 - num2) <= oversight;
+        return point.X > 0 && point.X <= Game.WINDOW_X && point.Y > 0 && point.Y <= Game.WINDOW_Y;
     }
 }
 
-public static class AgarioRandom
-{
-    private static Random r = new();
 
-    public static int NextInt(int MaxValue)
-    {
-        return r.Next(MaxValue);
-    }
-}

@@ -32,7 +32,7 @@ public class AIController : Controller
 
     private void PickNewDestination()
     {
-        destination = Game.GetRandomPosition();
+        destination = AgarioRandom.GetRandomPosition();
         if (AgarioRandom.NextInt(10) % 2 == 0)
             destination *= -1;
         cooldownPassed = 0;
