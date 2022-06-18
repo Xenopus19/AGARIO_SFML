@@ -1,0 +1,4 @@
+[Window Data]
+WindowX=100
+WindowY=900
+WindowName=Шарики-каннибалы

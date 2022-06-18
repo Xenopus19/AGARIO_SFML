@@ -13,6 +13,6 @@ public static class AgarioRandom
 
     public static Vector2f GetRandomPosition()
     {
-        return new Vector2f(AgarioRandom.NextInt(Game.WINDOW_X), AgarioRandom.NextInt(Game.WINDOW_Y));
+        return new Vector2f(AgarioRandom.NextInt(Game.WindowX), AgarioRandom.NextInt(Game.WindowY));
     }
 }

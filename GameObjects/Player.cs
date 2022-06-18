@@ -140,6 +140,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 	private void CalculateNewStats()
     {
 		sprite.Radius = RADIUS_COEF * Power + 10;
+		sprite.Origin += new Vector2f(sprite.Radius/2, sprite.Radius/2);
 		Speed /= Power;
     }
 

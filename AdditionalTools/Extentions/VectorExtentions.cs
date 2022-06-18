@@ -27,7 +27,7 @@ public static class VectorExtentions
 
     public static bool PointIsInsideField(this Vector2f point)
     {
-        return point.X > 0 && point.X <= Game.WINDOW_X && point.Y > 0 && point.Y <= Game.WINDOW_Y;
+        return point.X > 0 && point.X <= Game.WindowX && point.Y > 0 && point.Y <= Game.WindowY;
     }
 }
 

@@ -9,9 +9,9 @@ namespace Agario;
 
 public class Game
 {
-	public const int WINDOW_X = 1600;
-	public const int WINDOW_Y = 900;
-	public const string GAME_NAME = "Шарики-каннибалы";
+	public static int WindowX;
+	public static int WindowY;
+	public static string WindowName;
 
 	private static Game game;
 
@@ -32,7 +32,8 @@ public class Game
 	{
 		game = this;
 
-		window = new(new(WINDOW_X, WINDOW_Y), GAME_NAME);
+		GameSettingsLoader.LoadConfig();
+		window = new(new((uint)WindowX, (uint)WindowY), WindowName);
 		window.SetFramerateLimit(60);
 		Graphics.LoadTextures();
 		collidableList = new();
@@ -46,6 +47,11 @@ public class Game
 
 		PlayersAmount = 5;
 	}
+
+	public static Game GetInstance()
+    {
+		return game;
+    }
 
 	public static T Instantiate<T>() where T : new()
     {
