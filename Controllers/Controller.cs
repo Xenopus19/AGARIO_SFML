@@ -4,16 +4,46 @@ using SFML.Window;
 using Agario.GameObjects;
 
 namespace Agario.Controllers;
-public abstract class Controller
+public abstract class Controller : DeletableObject, IUpdatable
 {
-	public void GetCommands(Player player) 
-	{
-		GetDirection(player);
-		GetShotDirection(player);
-	}
-	public virtual void GetDirection(Player player) { }
+	public static Controller CurrentPlayerController;
+	public Player player;
 
-	public virtual void GetShotDirection(Player player) { }
+	public Controller()
+    {
+		player = Game.Instantiate<Player>();
+		player.OnDestroy += Die;
+    }
+	public void Update() 
+	{
+		CheckMovementInput();
+		CheckShootingInput();
+		CheckSoulRecast();
+	}
+	public virtual void CheckMovementInput() { }
+	public virtual void CheckShootingInput() { }
+	private static void Swap(Controller first, Controller second)
+    {
+		Player temp = first.player;
+		first.player = second.player;
+		second.player = temp;
+		
+    }
+	private void CheckSoulRecast()
+	{
+		Vector2i mousePos = Mouse.GetPosition();
+		if (player.GetCollider().Contains(mousePos.X, mousePos.Y) && CurrentPlayerController != this)
+		{
+			Console.WriteLine("Soul Recast");
+			Swap(this, CurrentPlayerController);
+		}
+	}
+
+	private void Die(DeletableObject deletable)
+    {
+		InvokeDeleteEvent();
+    }
+	
 
 }
 

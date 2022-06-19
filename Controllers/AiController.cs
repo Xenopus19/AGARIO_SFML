@@ -13,13 +13,13 @@ public class AIController : Controller
 
     private float destinatonChangeCooldown;
     private float cooldownPassed;
-    public AIController()
+    public AIController() : base()
     {
         destinatonChangeCooldown = 500;
         PickNewDestination();
     }
 
-	public override void GetDirection(Player player)
+    public override void CheckMovementInput()
     {
         cooldownPassed += AgarioTime.DeltaTime;
         if(cooldownPassed>=destinatonChangeCooldown)

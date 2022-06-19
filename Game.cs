@@ -4,6 +4,7 @@ using SFML.System;
 using SFML.Window;
 using Agario.AdditionalTools;
 using Agario.GameObjects;
+using Agario.Controllers;
 
 namespace Agario;
 
@@ -32,9 +33,7 @@ public class Game
 	{
 		game = this;
 
-		GameSettingsLoader.LoadConfig();
-		window = new(new((uint)WindowX, (uint)WindowY), WindowName);
-		window.SetFramerateLimit(60);
+		
 		Graphics.LoadTextures();
 		collidableList = new();
 		drawableList = new();
@@ -58,10 +57,18 @@ public class Game
 		return game.Spawn<T>();
 	}
 
+	private void PostLoad()
+    {
+		GameSettingsLoader.LoadConfig();
+		window = new(new((uint)WindowX, (uint)WindowY), WindowName);
+		window.SetFramerateLimit(60);
+	}
+
 	
 
 	public void Begin()
     {
+		PostLoad();
 		SpawnPlayers();
 		while (window.IsOpen)
         {
@@ -71,11 +78,10 @@ public class Game
 
 	private void SpawnPlayers()
     {
-		Player notAI = Spawn<Player>();
-		notAI.ToggleBotOrPlayer();
+		PlayerController notAI = Spawn<PlayerController>();
 
 		for (int i = 0; i < PlayersAmount; i++)
-			Spawn<Player>();
+			Spawn<AIController>();
     }
 
 	public void GameCycle()

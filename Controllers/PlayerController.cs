@@ -7,12 +7,14 @@ namespace Agario.Controllers;
 public class PlayerController : Controller
 {
 	private Controls controls;
-	public PlayerController(Controls _controls) 
+	public PlayerController() : base()
 	{
-		controls = _controls;
+		controls = new();
+		CurrentPlayerController = this;
+		Player.CurrentPlayer = player;
 	}
 
-	public override void GetDirection(Player player)
+    public override void CheckMovementInput()
     {
 		Vector2i dir = new Vector2i();
 
@@ -28,7 +30,7 @@ public class PlayerController : Controller
 		 player.Move((Vector2f)dir);
 	}
 
-    public override void GetShotDirection(Player player)
+    public override void CheckShootingInput()
     {
         if(Keyboard.IsKeyPressed(controls.ShotKey))
         {
@@ -36,4 +38,6 @@ public class PlayerController : Controller
 			player.MakeShot(dir);
         }
     }
+
+	
 }

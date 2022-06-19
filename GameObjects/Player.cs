@@ -10,14 +10,12 @@ namespace Agario.GameObjects;
 
 public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 {
-	private static Player CurrentPlayer;
+	public static Player CurrentPlayer;
 
 	private const int RADIUS_COEF = 10;
 
 	private float Speed;
 	private int Power;
-
-	private Controller controller;
 
 	private CircleShape sprite;
 
@@ -26,14 +24,11 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 		sprite = new();
 		sprite.Position = AgarioRandom.GetRandomPosition();
 		Speed = 0.5f;
-		BecomeAI();
 		Power = 1;
 		InitGraphics();
 	}
 	public void Update()
     {
-		controller.GetCommands(this);
-		CheckSoulRecast();
 		CheckHp();
     }
 
@@ -44,16 +39,7 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 		ChangePower(-Damage);
     }
 
-	private void CheckSoulRecast()
-    {
-		Vector2i mousePos = Mouse.GetPosition();
-		if(sprite.GetGlobalBounds().Contains(mousePos.X, mousePos.Y) && CurrentPlayer!=this)
-        {
-			Console.WriteLine("Soul Recast");
-			CurrentPlayer.ToggleBotOrPlayer();
-			ToggleBotOrPlayer();
-        }
-    }
+	
 
 	private void CheckHp()
     {
@@ -62,8 +48,6 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 
 	public void Draw(RenderWindow window)
     {
-		if (controller is PlayerController) sprite.OutlineThickness = 5f;
-		else sprite.OutlineThickness = 0;
 		sprite.Draw(window, RenderStates.Default);
     }
 
@@ -76,14 +60,6 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
     }
 
 	public int GetPower => Power;
-
-	public void ToggleBotOrPlayer()
-    {
-		if (controller is PlayerController)
-			BecomeAI();
-		else
-			BecomePlayer();
-    }
 
 	public void MakeShot(Vector2f clickedPosition)
     {
@@ -140,23 +116,12 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 	private void CalculateNewStats()
     {
 		sprite.Radius = RADIUS_COEF * Power + 10;
-		sprite.Origin += new Vector2f(sprite.Radius/2, sprite.Radius/2);
+		sprite.Origin = new Vector2f(sprite.Radius, sprite.Radius);
 		Speed /= Power;
     }
 
 	public void GetEaten()
     {
 		InvokeDeleteEvent();
-    }
-
-	private void BecomePlayer()
-    {
-		controller = new PlayerController(new());
-		CurrentPlayer = this;
-    }
-
-	private void BecomeAI()
-    {
-		controller = new AIController();
     }
 }

@@ -73,6 +73,7 @@ public class Bullet : DeletableObject, ICollidable, IDrawable, IUpdatable
 	private void InitGraphics()
     {
 		sprite = new CircleShape(10);
+		sprite.Origin = new Vector2f(sprite.Radius, sprite.Radius);
 		sprite.FillColor = Color.Red;
     }
 }
