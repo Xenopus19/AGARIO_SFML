@@ -12,7 +12,14 @@ public class PlayerController : Controller
 		controls = new();
 		CurrentPlayerController = this;
 		Player.CurrentPlayer = player;
+		player.SetOutlineThickness(5);
 	}
+
+    public override void SetPlayer(Player player)
+    {
+        this.player = player;
+		player.SetOutlineThickness(5);
+    }
 
     public override void CheckMovementInput()
     {

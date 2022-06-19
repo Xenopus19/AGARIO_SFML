@@ -18,6 +18,11 @@ public class AIController : Controller
         destinatonChangeCooldown = 500;
         PickNewDestination();
     }
+    public override void SetPlayer(Player player)
+    {
+        this.player = player;
+        player.SetOutlineThickness(0);
+    }
 
     public override void CheckMovementInput()
     {

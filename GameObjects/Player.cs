@@ -119,9 +119,13 @@ public class Player : DeletableObject, ICollidable, IUpdatable, IDrawable
 		sprite.Origin = new Vector2f(sprite.Radius, sprite.Radius);
 		Speed /= Power;
     }
-
 	public void GetEaten()
     {
 		InvokeDeleteEvent();
+    }
+
+	public void SetOutlineThickness(int thickness)
+    {
+		sprite.OutlineThickness = thickness;
     }
 }

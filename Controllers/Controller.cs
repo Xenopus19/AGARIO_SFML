@@ -7,7 +7,7 @@ namespace Agario.Controllers;
 public abstract class Controller : DeletableObject, IUpdatable
 {
 	public static Controller CurrentPlayerController;
-	public Player player;
+	public Player player { get; protected set; }
 
 	public Controller()
     {
@@ -22,11 +22,12 @@ public abstract class Controller : DeletableObject, IUpdatable
 	}
 	public virtual void CheckMovementInput() { }
 	public virtual void CheckShootingInput() { }
+	public virtual void SetPlayer(Player player) { }
 	private static void Swap(Controller first, Controller second)
     {
 		Player temp = first.player;
-		first.player = second.player;
-		second.player = temp;
+		first.SetPlayer(second.player);
+		second.SetPlayer(temp);
 		
     }
 	private void CheckSoulRecast()
@@ -43,8 +44,6 @@ public abstract class Controller : DeletableObject, IUpdatable
     {
 		InvokeDeleteEvent();
     }
-	
-
 }
 
 public struct Controls
