@@ -25,10 +25,10 @@ public class Game
 	private List<DeletableObject> objectsToDelete;
 	private List<object> objectsToSpawn;
 
-	private float FoodCooldown;
-	private float PassedCooldown;
+	private AutomaticSpawner<Food> foodSpawner;
+	private AutomaticSpawner<AIController> botSpawner;
 
-	private int PlayersAmount;
+	private int BasePlayersAmount;
 	public Game()
 	{
 		game = this;
@@ -41,10 +41,8 @@ public class Game
 		objectsToDelete = new();
 		objectsToSpawn = new();
 
-		FoodCooldown = 1000;
-		PassedCooldown = 0;
 
-		PlayersAmount = 5;
+		BasePlayersAmount = 5;
 	}
 
 	public static Game GetInstance()
@@ -69,18 +67,23 @@ public class Game
 	public void Begin()
     {
 		PostLoad();
-		SpawnPlayers();
+		SpawnBaseObjects();
 		while (window.IsOpen)
         {
 			GameCycle();
         }
     }
 
-	private void SpawnPlayers()
+	private void SpawnBaseObjects()
     {
+		foodSpawner = Spawn<AutomaticSpawner<Food>>();
+		foodSpawner.Init(1000);
+		botSpawner = Spawn<AutomaticSpawner<AIController>>();
+		botSpawner.Init(2000);
+
 		PlayerController notAI = Spawn<PlayerController>();
 
-		for (int i = 0; i < PlayersAmount; i++)
+		for (int i = 0; i < BasePlayersAmount; i++)
 			Spawn<AIController>();
     }
 
@@ -90,7 +93,6 @@ public class Game
 
 		UpdateObjects();
 		CheckCollision();
-		TrySpawnFood();
 
 		DrawObjects();
 
@@ -105,17 +107,6 @@ public class Game
 			AddToCollections(obj);
         }
 		objectsToSpawn.Clear();
-    }
-
-	private void TrySpawnFood()
-    {
-		PassedCooldown += AgarioTime.DeltaTime;
-
-		if(PassedCooldown>=FoodCooldown)
-        {
-			Spawn<Food>();
-			PassedCooldown = 0;
-        }
     }
 
 	private void DrawObjects()
