@@ -1,7 +1,7 @@
 ﻿using System;
 using Agario.AdditionalTools;
 
-namespace Agario;
+namespace Agario.GameObjects;
 public class AutomaticSpawner<T> : IUpdatable where T : new()
 {
     private float spawnCooldown;
